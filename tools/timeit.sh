@@ -8,6 +8,8 @@ ERRPUT=/dev/stderr
 PERFSTAT=perfstats
 APPEND_STATUS=0
 
+PERFEVENT="task-clock,raw_syscalls:sys_enter,context-switches,cpu-migrations,page-faults,cycles,instructions,branches,branch-misses"
+
 while [[ $1 = -* ]]; do
   if [ $1 = "--summary" ]; then
     REPORT=$2
@@ -31,9 +33,9 @@ done
 
 if [ "$OUTPUT" = "$ERRPUT" ]; then
   # Use >& to ensure the streams are properly interleaved.
-  perf stat -o $PERFSTAT $@ < $INPUT >& $OUTPUT
+  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT >& $OUTPUT
 else
-  perf stat -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT
+  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT
 fi
 
 EXITCODE=$?
@@ -46,6 +48,6 @@ if [ "$APPEND_STATUS" = "1" ]; then
 fi
 
 echo exit $EXITCODE > $REPORT
-awk -F' ' '{if ($2 ~ /^task-clock/ || $3 ~ /^task-clock/) print "user",$1/1000; else if($2 == "seconds" && $4 == "elapsed") print "real",$1;}' $PERFSTAT >> $REPORT
+awk -F',' '{if ($2 ~ /^task-clock/ || $3 ~ /^task-clock/) print "user",$1/1000; else if($2 == "seconds" && $4 == "elapsed") print "real",$1;}' $PERFSTAT >> $REPORT
 
 exit $EXITCODE
