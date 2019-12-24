@@ -13,6 +13,7 @@ add_definitions(
   -DWITH_GL_PROFILE_COMPAT
   -DWITH_HEADLESS
   -DHAVE_UNSIGNED_CHAR
+  -DHAVE_STDBOOL_H
 )
 add_compile_options(-funsigned-char)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-D__BOOL_DEFINED>)
