@@ -33,10 +33,13 @@ done
 
 if [ "$OUTPUT" = "$ERRPUT" ]; then
   # Use >& to ensure the streams are properly interleaved.
-  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT >& $OUTPUT
+  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT >& $OUTPUT &
 else
-  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT
+  perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT &
 fi
+sleep 0.1
+PID=$(pidof $1)
+wait
 
 EXITCODE=$?
 if [ "$APPEND_STATUS" = "1" ]; then
@@ -48,6 +51,7 @@ if [ "$APPEND_STATUS" = "1" ]; then
 fi
 
 echo exit $EXITCODE > $REPORT
+echo pid $PID >> $REPORT
 awk -F',' '{if ($2 ~ /^task-clock/ || $3 ~ /^task-clock/) print "user",$1/1000; else if($2 == "seconds" && $4 == "elapsed") print "real",$1;}' $PERFSTAT >> $REPORT
 
 exit $EXITCODE
