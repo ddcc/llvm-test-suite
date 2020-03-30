@@ -37,8 +37,7 @@ if [ "$OUTPUT" = "$ERRPUT" ]; then
 else
   perf stat -x, -e $PERFEVENT -o $PERFSTAT $@ < $INPUT > $OUTPUT 2> $ERRPUT &
 fi
-sleep 0.1
-PID=$(pidof $1)
+PID=$!
 wait
 
 EXITCODE=$?
