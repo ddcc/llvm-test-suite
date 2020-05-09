@@ -8,6 +8,8 @@ speccpu2017_benchmark(RATE)
 
 speccpu2017_add_include_dirs(include .)
 
+add_definitions(-fno-force-emit-vtables)
+
 ## test ########################################################################
 
 speccpu2017_run_test(
