@@ -8,7 +8,7 @@ ERRPUT=/dev/stderr
 PERFSTAT=perfstats
 APPEND_STATUS=0
 
-PERFEVENT="task-clock,raw_syscalls:sys_enter,context-switches,cpu-migrations,page-faults,cycles,instructions,branches,branch-misses"
+PERFEVENT="task-clock,raw_syscalls:sys_enter,context-switches,cpu-migrations,page-faults,cycles,instructions,branches,branch-misses,cache-references,cache-misses"
 
 while [[ $1 = -* ]]; do
   if [ $1 = "--summary" ]; then
