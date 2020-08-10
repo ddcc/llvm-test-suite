@@ -53,4 +53,5 @@ echo exit $EXITCODE > $REPORT
 echo pid $PID >> $REPORT
 awk -F',' '{if ($2 ~ /^task-clock/ || $3 ~ /^task-clock/) print "user",$1/1000; else if($2 == "seconds" && $4 == "elapsed") print "real",$1;}' $PERFSTAT >> $REPORT
 
+sleep 1s
 exit $EXITCODE
